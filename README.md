@@ -16,9 +16,28 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Development Guidelines
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Image Handling
+
+This project enforces strict image handling safety. **Do not use `next/image` directly.**
+
+Instead, use the `SafeImage` component located at `src/components/ui/SafeImage.tsx`.
+
+```tsx
+// ❌ Incorrect
+import Image from 'next/image';
+<Image src={maybeNullSrc} ... />
+
+// ✅ Correct
+import SafeImage from '@/components/ui/SafeImage';
+<SafeImage src={maybeNullSrc} ... />
+```
+
+The `SafeImage` component:
+1. Uses a native `<img>` tag to avoid `next/image` runtime errors with null sources.
+2. Automatically falls back to a placeholder image (`https://placehold.co/600x400`) if the `src` is null, undefined, or an empty string.
+3. Supports standard `img` attributes and `className`.
 
 ## Learn More
 
