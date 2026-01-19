@@ -25,3 +25,11 @@ body {
     text-wrap: balance;
   }
 }
+
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    word-break: break-word;
+  }
+}

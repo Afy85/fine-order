@@ -3,7 +3,7 @@
 import { Case } from '@/types';
 import useEmblaCarousel from 'embla-carousel-react';
 import SafeImage from './ui/SafeImage';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface CasesCarouselProps {
@@ -12,6 +12,8 @@ interface CasesCarouselProps {
 
 export default function CasesCarousel({ cases }: CasesCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [totalSlides, setTotalSlides] = useState(0);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -21,6 +23,16 @@ export default function CasesCarousel({ cases }: CasesCarouselProps) {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
+  useEffect(() => {
+    if (!emblaApi) return;
+    const update = () => {
+      setCurrentIndex(emblaApi.selectedScrollSnap());
+      setTotalSlides(emblaApi.scrollSnapList().length);
+    };
+    update();
+    emblaApi.on('select', update);
+    emblaApi.on('reInit', update);
+  }, [emblaApi]);
   return (
     <section id="cases" className="py-20 bg-neutral-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -64,16 +76,24 @@ export default function CasesCarousel({ cases }: CasesCarouselProps) {
           
           <button 
             onClick={scrollPrev} 
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-all hidden md:block"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-white/80 p-1 shadow-sm hover:bg-white active:scale-95 transition-all"
           >
             <ChevronLeft size={24} />
           </button>
           <button 
             onClick={scrollNext} 
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-all hidden md:block"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-white/80 p-1 shadow-sm hover:bg-white active:scale-95 transition-all"
           >
             <ChevronRight size={24} />
           </button>
+          <div className="flex justify-center gap-2 mt-4">
+            {Array.from({ length: totalSlides }).map((_, i) => (
+              <div
+                key={i}
+                className={`h-2 w-2 rounded-full ${i === currentIndex ? 'bg-gray-800' : 'bg-gray-300'}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -23,7 +23,7 @@ export default function Hero({ settings }: HeroProps) {
       </div>
 
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+        <h1 className="hero-title text-2xl sm:text-3xl md:text-5xl font-bold leading-tight text-white mb-6">
           {settings.hero_title}
         </h1>
       </div>
